@@ -257,6 +257,7 @@ def info_handle(args):
 def history_handle(args):
     global api
 
+    from .load_sql import load_history_to_sql_db as lll 
     all_history = read_history()
     if len(all_history) == 0:
         print(f"暂无历史记录")
@@ -267,7 +268,13 @@ def history_handle(args):
         for meta_dict in history.values():
             prefix = f"[{idx + 1}] "
             meta_dict['url'] = api.real2meta(meta_dict['url'])
-            print_history_meta(meta_dict, prefix)
+            # print_history_meta(meta_dict, prefix)
+            print("------------------------")
+            print(idx)
+            print(meta_dict["filename"])
+            print(meta_dict["url"])
+            print("------------------------")
+            lll(meta_dict)
             idx += 1
 
 def interact_mode(parser, subparsers):
