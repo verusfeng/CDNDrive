@@ -92,6 +92,9 @@ def write_history(first_4mb_sha1, meta_dict, site, url):
     with open(path.join(bundle_dir, history_fname), "w", encoding="utf-8") as f:
         f.write(json.dumps(history, ensure_ascii=False, indent=2))
 
+    from .load_sql import load_history_to_sql_db as lll
+    lll(meta_dict)
+
 
 def read_in_chunk(fname, size=4 * 1024 * 1024, cnt=-1):
     with open(fname, "rb") as f:
