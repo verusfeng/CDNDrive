@@ -23,6 +23,7 @@ from .drivers import *
 from .encoders import *
 from .util import *
 
+
 encoder = None
 api = None
 
@@ -328,6 +329,11 @@ def interact_mode(parser, subparsers):
             pass
 
 
+def backup_handle(args):
+    log(f"Back up process....")
+    write_backup()
+
+
 def main():
     signal.signal(signal.SIGINT, lambda signum, frame: os.kill(os.getpid(), 9))
     parser = argparse.ArgumentParser(
@@ -375,9 +381,14 @@ def main():
     info_parser = subparsers.add_parser("info", help="show meta info")
     info_parser.add_argument("meta", help="meta url")
     info_parser.set_defaults(func=info_handle)
+
     history_parser = subparsers.add_parser(
         "history", help="show upload history")
     history_parser.set_defaults(func=history_handle)
+
+    backup_parser = subparsers.add_parser(
+        "backup", help="backup cdndrive message")
+    backup_parser.set_defaults(func=backup_handle)
 
     args = parser.parse_args()
     args.func(args)

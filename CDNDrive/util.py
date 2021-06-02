@@ -9,9 +9,13 @@ import requests
 import json
 import time
 import tempfile
+import pathlib
+from . import drivers as dr
+
 
 # bundle_dir = tempfile.gettempdir()
-bundle_dir = os.path.join(os.getenv("HOME"), ".cdndrive")
+# bundle_dir = os.path.join(os.getenv("HOME"), ".cdndrive")
+bundle_dir = pathlib.PurePath(os.getenv("HOME"), ".cdndrive")
 try:
     os.mkdir(bundle_dir)
 except FileExistsError as e:
@@ -82,6 +86,29 @@ def read_history(site=None):
         return history
     else:
         return history.get(site, {})
+
+
+def write_backup():
+    log(f"{__name__}, start")
+
+    history_path = pathlib.PurePath(bundle_dir, history_fname)
+    history_dict = json.loads(open(history_path, "r", encoding="utf8").read())
+
+    backup_path = pathlib.PurePath(bundle_dir, "backup_history.txt")
+
+    with open(backup_path, "w", encoding="utf8") as wfp:
+        for site, item_dict in history_dict.items():
+            lines = []
+            api = dr.drivers[site]
+            for cell in item_dict.values():
+                url = api.real2meta(cell['url'])
+                filename = cell['filename']
+                write_line = f"{site}\t{url}\t{filename}\n"
+                lines.append(write_line)
+            lines.sort(key=lambda arg: arg.split()[-1])
+            wfp.writelines(lines)
+
+    log(f"{__name__}, done.")
 
 
 def write_history(first_4mb_sha1, meta_dict, site, url):
