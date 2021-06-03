@@ -93,20 +93,18 @@ def write_backup():
 
     history_path = pathlib.PurePath(bundle_dir, history_fname)
     history_dict = json.loads(open(history_path, "r", encoding="utf8").read())
-
     backup_path = pathlib.PurePath(bundle_dir, "backup_history.txt")
+
+    exist_data = json.loads(open(backup_path, "r", encoding='utf8').read())
 
     with open(backup_path, "w", encoding="utf8") as wfp:
         for site, item_dict in history_dict.items():
-            lines = []
             api = dr.drivers[site]
             for cell in item_dict.values():
                 url = api.real2meta(cell['url'])
                 filename = cell['filename']
-                write_line = f"{site}\t{url}\t{filename}\n"
-                lines.append(write_line)
-            lines.sort(key=lambda arg: arg.split()[-1])
-            wfp.writelines(lines)
+                exist_data[url] = filename
+        wfp.write(json.dumps(exist_data, indent=4, ensure_ascii=False))
 
     log(f"{__name__}, done.")
 
