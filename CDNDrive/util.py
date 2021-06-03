@@ -104,6 +104,7 @@ def write_backup():
                 url = api.real2meta(cell['url'])
                 filename = cell['filename']
                 exist_data[url] = filename
+        log(f"{type(exist_data)}")
         wfp.write(json.dumps(exist_data, indent=4, ensure_ascii=False))
 
     log(f"{__name__}, done.")
