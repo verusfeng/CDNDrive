@@ -187,7 +187,7 @@ def upload_handle(args):
         log(f"{meta_dict['filename']} ({size_string(meta_dict['size'])}) 上传完毕, 用时{time.time() - start_time:.1f}秒, 平均速度{size_string(meta_dict['size'] / (time.time() - start_time))}/s")
         log(f"META URL -> {api.real2meta(url)}")
         log(f"WEB  URL -> {url}")
-        write_history(first_4mb_sha1, meta_dict, args.site, url)
+        write_history(first_4mb_sha1, meta_dict, args.site, url, api.real2meta(url))
         # TBD write sql here ...
         return url
     else:

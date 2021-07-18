@@ -110,7 +110,7 @@ def write_backup():
     log(f"{__name__}, done.")
 
 
-def write_history(first_4mb_sha1, meta_dict, site, url):
+def write_history(first_4mb_sha1, meta_dict, site, url, apiurl):
     history = read_history()
     history.setdefault(site, {})
     history[site][first_4mb_sha1] = meta_dict
@@ -119,7 +119,10 @@ def write_history(first_4mb_sha1, meta_dict, site, url):
         f.write(json.dumps(history, ensure_ascii=False, indent=2))
 
     from .load_sql import load_history_to_sql_db as lll
-    lll(meta_dict)
+    from copy import deepcopy 
+    tmp_meta_dict = deepcopy(meta_dict)
+    tmp_meta_dict['url'] = apiurl
+    lll(tmp_meta_dict)
 
 
 def read_in_chunk(fname, size=4 * 1024 * 1024, cnt=-1):
