@@ -13,7 +13,7 @@ logging.basicConfig(level=0)
 def load_history_to_sql_db(metadict):
     db_url = pathlib.PurePath(
         os.getenv("HOME"), ".cdndrive", "cdrive_sqlite.db")
-    logging.debug(f"sqlite3 db url is {db_url}")
+    # logging.debug(f"sqlite3 db url is {db_url}")
 
     with sqlite3.connect(db_url) as db:
         replace_sql = '''
